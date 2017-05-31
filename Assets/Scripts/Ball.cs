@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ball : MonoBehaviour {
-	public float speed = 3;
 	private Vector2 randomDirection;
 
 	void Start () {
@@ -11,15 +10,25 @@ public class Ball : MonoBehaviour {
 		InitRandomVelocity ();
 	}
 
+	void Update() {
+		Vector2 velocity = GetComponent<Rigidbody2D> ().velocity;
+		if (velocity.x == 0) {
+			GetComponent<Rigidbody2D> ().velocity = velocity + new Vector2(1.0F, 0);
+		}
+		if (velocity.y == 0) {
+			GetComponent<Rigidbody2D> ().velocity = velocity + new Vector2(0, 1.0F);
+		}
+	}
+
 	public void InitRandomVelocity() {
 		randomDirection = new Vector2 (
-			Random.Range (-0.9f, 0.9f),
+			Random.Range (-0.5f, 0.5f),
 			Random.Range (0, 0.9f)
 		).normalized;
 			
 		Debug.Log ("Random velocity with direction: " + randomDirection);
 
-		GetComponent<Rigidbody2D> ().velocity = speed * randomDirection;
+		GetComponent<Rigidbody2D> ().velocity = BreakoutGame.speed * randomDirection;
 	}
 
 	public void ResetPosition() {

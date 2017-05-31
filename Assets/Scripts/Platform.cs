@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour {
 
-	public int speed = 5;
-
 	void FixedUpdate() {
 		float v = Input.GetAxisRaw ("Horizontal");
-		GetComponent<Rigidbody2D> ().velocity = new Vector2 (v, 0) * speed;
+		GetComponent<Rigidbody2D> ().velocity = new Vector2 (v, 0) * 1.2F * BreakoutGame.speed;
 	}
 }

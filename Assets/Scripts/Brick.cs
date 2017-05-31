@@ -4,19 +4,10 @@ using UnityEngine;
 
 public class Brick : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	public BreakoutGame game;
 
-	void OnCollisionEnter2D(Collision2D col) {		
-		BreakoutGame.Score += 10;
-		Debug.Log ("Score: " + BreakoutGame.Score);
+	void OnCollisionEnter2D(Collision2D col) {
+		game.onBrickDeletion ();
 		Destroy (gameObject);
 	}
 }

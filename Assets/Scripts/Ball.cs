@@ -7,6 +7,7 @@ public class Ball : MonoBehaviour {
 	private Vector2 randomDirection;
 
 	void Start () {
+		ResetPosition ();
 		InitRandomVelocity ();
 	}
 
@@ -22,7 +23,7 @@ public class Ball : MonoBehaviour {
 	}
 
 	public void ResetPosition() {
-		gameObject.transform.position = new Vector2 (0, 0);
+		gameObject.transform.position = new Vector2 (0, -3.5F);
 	}
 
 	void OnCollisionEnter2D (Collision2D collider) {

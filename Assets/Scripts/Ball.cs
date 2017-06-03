@@ -12,10 +12,10 @@ public class Ball : MonoBehaviour {
 
 	void Update() {
 		Vector2 velocity = GetComponent<Rigidbody2D> ().velocity;
-		if (velocity.x == 0) {
+		if (Mathf.Abs(velocity.x) < 1.0F) {
 			GetComponent<Rigidbody2D> ().velocity = velocity + new Vector2(1.0F, 0);
 		}
-		if (velocity.y == 0) {
+		if (Mathf.Abs(velocity.y) < 1.0F) {
 			GetComponent<Rigidbody2D> ().velocity = velocity + new Vector2(0, 1.0F);
 		}
 	}

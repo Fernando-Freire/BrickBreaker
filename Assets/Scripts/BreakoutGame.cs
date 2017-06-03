@@ -14,9 +14,9 @@ public class BreakoutGame : MonoBehaviour {
 	public Ball Ball;
 	public Transform brickPrefab;
 	public Camera camera;
+	public ScoreDisplay scoreDisplay;
 	private float screenWidth;
 
-	public bool loading = true;
 	private Vector3 bottomLeft, topLeft, topRight, bottomRight;
 
 	Color[] rowColors = {
@@ -31,26 +31,23 @@ public class BreakoutGame : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		loading = true;
 		bottomLeft  = camera.ScreenToWorldPoint (new Vector3 (0, 0, 0));
 		topLeft     = camera.ScreenToWorldPoint (new Vector3 (0, Screen.height, 0));
 		topRight    = camera.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0));
 		bottomRight = camera.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 0));
 
 		screenWidth  = Vector3.Distance (bottomLeft, bottomRight);
+		this.scoreDisplay.setDisplayedScore (0);
 		StartGameForLevel (1);
 	}
 
 	void StartGameForLevel(int level) {
-		loading = true;
 		Debug.Log ("Starting level " + level);
 		currentLevel = level;
-		speed = 4 + level;
+		speed = 4 + 2 * level;
 
 		positionBricks ();
 		Ball.ResetPosition ();
-
-		loading = false;	
 	}
 
 	void positionBricks() {
@@ -91,6 +88,7 @@ public class BreakoutGame : MonoBehaviour {
 
 	public void onBrickDeletion() {
 		this.Score += 10 * currentLevel;
+		this.scoreDisplay.setDisplayedScore (this.Score);
 		this.BricksInBoard -= 1;
 		if (this.BricksInBoard == 0) {
 			StartGameForLevel (currentLevel + 1);

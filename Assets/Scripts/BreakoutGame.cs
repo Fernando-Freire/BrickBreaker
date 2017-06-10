@@ -53,8 +53,8 @@ public class BreakoutGame : MonoBehaviour {
 	}
 
 	public void DeleteAllBricks(){
-		foreach (Brick o in Object.FindObjectsOfType<Brick>()) {
-			o.Destroy ();
+		foreach (Brick brick in Object.FindObjectsOfType<Brick>()) {
+			brick.Explode (false);
 		}
 		BricksInBoard = 0;
 		currentLevel -= 1;
@@ -79,20 +79,17 @@ public class BreakoutGame : MonoBehaviour {
 		float spaceBetweenBricks = brickWidth / 10;
 
 		int bricksPerRow = (int)(this.screenWidth / (brickWidth + spaceBetweenBricks));
-		Debug.Log ("Each row will fit " + bricksPerRow + " bricks");
 		float paddingSize = (screenWidth - (bricksPerRow - 1) * (brickWidth + spaceBetweenBricks) - brickWidth) / 2.0F;
 
 		int rowCount = 0;
 		float y = this.topLeft.y - (1.5F * brickHeight + spaceBetweenBricks);
 		while (rowCount < 7) {
 			int brickCount = 0;
-			Debug.Log ("Positioning new brick row...");
 			for (float x = this.bottomLeft.x + paddingSize + brickWidth / 2; 
 				brickCount < bricksPerRow;
 				x += brickWidth + spaceBetweenBricks) {			
 				Vector3 initial_position = new Vector3 (x, y, 0);
 
-				Debug.Log ("Positioning new brick...");
 				Transform brick = Instantiate (brickPrefab, initial_position, Quaternion.identity);	
 				brick.GetComponent<Renderer> ().material.color = rowColors [rowCount];
 				brick.GetComponent<Brick> ().game = this;

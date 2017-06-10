@@ -37,5 +37,7 @@ public class Ball : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D (Collision2D collider) {
+		AudioSource audio = GetComponent<AudioSource> ();
+		audio.Play ();
 	}
 }

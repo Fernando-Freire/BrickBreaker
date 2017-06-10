@@ -25,11 +25,9 @@ public class GameEdge : MonoBehaviour {
 
 	void OnCollisionEnter2D (Collision2D collider) {
 		if (collider.contacts [0].normal.y < 0) {
-			BreakoutGame.CollisionsWithEdge += 1;
-			Debug.Log (BreakoutGame.CollisionsWithEdge);
 			game.Score = 0;
 			BreakoutGame.currentLevel = 1;
-			game.Start ();
+			game.onMissedBall ();
 		}
 	}
 }

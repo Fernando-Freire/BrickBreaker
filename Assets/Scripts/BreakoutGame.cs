@@ -9,11 +9,13 @@ public class BreakoutGame : MonoBehaviour {
 	public int Score = 0;
 	public static float speed = 5;
 
-	public static int CollisionsWithEdge = 0;
 	public int HighestScore;
 
 	public Ball Ball;
 	public Transform brickPrefab;
+	public Transform boosterPrefab;
+	public Transform blackHolePrefab;
+
 	public Camera camera;
 	public ScoreDisplay scoreDisplay;
 	public ScoreDisplay highScoreDisplay;
@@ -21,7 +23,7 @@ public class BreakoutGame : MonoBehaviour {
 
 	private Vector3 bottomLeft, topLeft, topRight, bottomRight;
 
-	Color[] rowColors = {
+	public static Color[] rowColors = {
 		new Color (1.0F, 0, 0, 1.0F),
 		new Color (1.0F, 0.5F, 0, 1.0F),
 		new Color (1.0F, 1.0F, 0, 1.0F),
@@ -35,7 +37,6 @@ public class BreakoutGame : MonoBehaviour {
 	public void Start () {
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
-		DeleteAllBricks ();
 		bottomLeft  = camera.ScreenToWorldPoint (new Vector3 (0, 0, 0));
 		topLeft     = camera.ScreenToWorldPoint (new Vector3 (0, Screen.height, 0));
 		topRight    = camera.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0));
@@ -52,7 +53,7 @@ public class BreakoutGame : MonoBehaviour {
 		StartGameForLevel (1);
 	}
 
-	public void DeleteAllBricks(){
+	public void DeleteAllBricks() {
 		foreach (Brick brick in Object.FindObjectsOfType<Brick>()) {
 			brick.Explode (false);
 		}
@@ -60,16 +61,22 @@ public class BreakoutGame : MonoBehaviour {
 		currentLevel -= 1;
 	}
 
-
+	public void DeleteAllBoosters() {
+		foreach (GenericBooster booster in Object.FindObjectsOfType<GenericBooster>()) {
+			booster.Destroy ();
+		}
+	}
+		
 	void StartGameForLevel(int level) {
-		Debug.Log ("Starting level " + level);
 		currentLevel = level;
 		speed = 4 + level;
 
 		positionBricks ();
+		if (level >= 3) {
+			PositionBoosterAndBlackHole ();
+		}
 
 		Ball.ResetPosition ();
-
 		Ball.InitRandomVelocity();
 	}
 
@@ -102,7 +109,24 @@ public class BreakoutGame : MonoBehaviour {
 		}
 	}
 
+	void PositionBoosterAndBlackHole() {
+		Vector2 boosterPosition = new Vector2 (
+			Random.Range(this.topLeft.x + 1.0F, this.topRight.x - 1.0F),
+			Random.Range(this.bottomLeft.y + 1.0F, this.topLeft.y - 1.0f));
+		
+		Vector2 blackHolePosition = new Vector2 (
+			Random.Range(this.topLeft.x + 1.0F, this.topRight.x - 1.0F),
+			Random.Range(this.bottomLeft.y + 1.0F, this.topLeft.y - 1.0f));
+
+		Transform booster = Instantiate (boosterPrefab, boosterPosition, Quaternion.identity);	
+		booster.name = "Booster";
+		Transform blackHole = Instantiate (blackHolePrefab, blackHolePosition, Quaternion.identity);	
+		blackHole.name = "BlackHole";
+	}
+
 	public void onMissedBall() {
+		DeleteAllBricks ();
+		DeleteAllBoosters ();
 		Start ();
 	}
 

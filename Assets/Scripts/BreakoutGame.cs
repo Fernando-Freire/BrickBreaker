@@ -10,12 +10,13 @@ public class BreakoutGame : MonoBehaviour {
 	public static float speed = 5;
 
 	public static int CollisionsWithEdge = 0;
-	public static int HighestScore;
+	public int HighestScore;
 
 	public Ball Ball;
 	public Transform brickPrefab;
 	public Camera camera;
 	public ScoreDisplay scoreDisplay;
+	public ScoreDisplay highScoreDisplay;
 	private float screenWidth;
 
 	private Vector3 bottomLeft, topLeft, topRight, bottomRight;
@@ -41,8 +42,12 @@ public class BreakoutGame : MonoBehaviour {
 		bottomRight = camera.ScreenToWorldPoint (new Vector3 (Screen.width, 0, 0));
 
 		screenWidth  = Vector3.Distance (bottomLeft, bottomRight);
-		this.scoreDisplay.setDisplayedScore (0);
+
 		this.Score = 0;
+		this.HighestScore = PlayerPrefs.GetInt ("highscore");
+
+		this.scoreDisplay.setDisplayedScore (this.Score);
+		this.highScoreDisplay.setDisplayedScore (this.HighestScore);
 
 		StartGameForLevel (1);
 	}
@@ -107,8 +112,11 @@ public class BreakoutGame : MonoBehaviour {
 	public void onBrickDeletion() {
 		this.Score += 10 * currentLevel;
 		this.scoreDisplay.setDisplayedScore (this.Score);
-		if (this.Score > HighestScore)
-			HighestScore = this.Score;
+		if (this.Score > this.HighestScore)
+			this.HighestScore = this.Score;
+			this.highScoreDisplay.setDisplayedScore (this.HighestScore);
+			PlayerPrefs.SetInt ("highscore", HighestScore);
+
 		this.BricksInBoard -= 1;
 		if (this.BricksInBoard == 0) {
 			StartGameForLevel (currentLevel + 1);

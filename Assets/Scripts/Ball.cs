@@ -28,6 +28,7 @@ public class Ball : MonoBehaviour {
 			
 		Debug.Log ("Random velocity with direction: " + randomDirection);
 
+
 		GetComponent<Rigidbody2D> ().velocity = BreakoutGame.speed * randomDirection;
 	}
 

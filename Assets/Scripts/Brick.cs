@@ -8,6 +8,9 @@ public class Brick : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D col) {
 		game.onBrickDeletion ();
+		this.Destroy ();
+	}
+	public void Destroy(){
 		Destroy (gameObject);
 	}
 }

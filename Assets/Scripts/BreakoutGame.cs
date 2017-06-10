@@ -10,6 +10,7 @@ public class BreakoutGame : MonoBehaviour {
 	public static float speed = 5;
 
 	public static int CollisionsWithEdge = 0;
+	public static int HighestScore;
 
 	public Ball Ball;
 	public Transform brickPrefab;
@@ -30,7 +31,10 @@ public class BreakoutGame : MonoBehaviour {
 	};
 
 	// Use this for initialization
-	void Start () {
+	public void Start () {
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+		DeleteAllBricks ();
 		bottomLeft  = camera.ScreenToWorldPoint (new Vector3 (0, 0, 0));
 		topLeft     = camera.ScreenToWorldPoint (new Vector3 (0, Screen.height, 0));
 		topRight    = camera.ScreenToWorldPoint (new Vector3 (Screen.width, Screen.height, 0));
@@ -38,16 +42,30 @@ public class BreakoutGame : MonoBehaviour {
 
 		screenWidth  = Vector3.Distance (bottomLeft, bottomRight);
 		this.scoreDisplay.setDisplayedScore (0);
+		this.Score = 0;
+
 		StartGameForLevel (1);
 	}
+
+	public void DeleteAllBricks(){
+		foreach (Brick o in Object.FindObjectsOfType<Brick>()) {
+			o.Destroy ();
+		}
+		BricksInBoard = 0;
+		currentLevel -= 1;
+	}
+
 
 	void StartGameForLevel(int level) {
 		Debug.Log ("Starting level " + level);
 		currentLevel = level;
-		speed = 4 + 2 * level;
+		speed = 4 + level;
 
 		positionBricks ();
+
 		Ball.ResetPosition ();
+
+		Ball.InitRandomVelocity();
 	}
 
 	void positionBricks() {
@@ -82,13 +100,15 @@ public class BreakoutGame : MonoBehaviour {
 		}
 	}
 
-	void onMissedBall() {
-		Ball.ResetPosition ();
+	public void onMissedBall() {
+		Start ();
 	}
 
 	public void onBrickDeletion() {
 		this.Score += 10 * currentLevel;
 		this.scoreDisplay.setDisplayedScore (this.Score);
+		if (this.Score > HighestScore)
+			HighestScore = this.Score;
 		this.BricksInBoard -= 1;
 		if (this.BricksInBoard == 0) {
 			StartGameForLevel (currentLevel + 1);
